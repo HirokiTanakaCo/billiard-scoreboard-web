@@ -58,7 +58,7 @@ export default function RoomPage({ params }: { params: Promise<RoomParams> }) {
   const [timerNow, setTimerNow] = useState(0)
   const [editingPlayerId, setEditingPlayerId] = useState<number | null>(null)
   const [editingPlayerName, setEditingPlayerName] = useState('')
-  const [editingPlayerTarget, setEditingPlayerTarget] = useState(3)
+  const [editingPlayerTarget, setEditingPlayerTarget] = useState('3')
   const [isSavingPlayer, setIsSavingPlayer] = useState(false)
   const [playerEditError, setPlayerEditError] = useState<string | null>(null)
   const [showPlayerSettings, setShowPlayerSettings] = useState(false)
@@ -174,7 +174,7 @@ export default function RoomPage({ params }: { params: Promise<RoomParams> }) {
   const startEditingPlayer = (player: RoomPlayer) => {
     setEditingPlayerId(player.id)
     setEditingPlayerName(player.name)
-    setEditingPlayerTarget(player.target ?? 3)
+    setEditingPlayerTarget(String(player.target ?? 3))
     setPlayerEditError(null)
     setShowPlayerSettings(true)
   }
@@ -194,10 +194,11 @@ export default function RoomPage({ params }: { params: Promise<RoomParams> }) {
       setPlayerEditError('プレイヤー名は1〜40文字で入力してください。')
       return
     }
+    const target = Number(editingPlayerTarget)
     if (
-      !Number.isInteger(editingPlayerTarget) ||
-      editingPlayerTarget < 1 ||
-      editingPlayerTarget > 99
+      !Number.isInteger(target) ||
+      target < 1 ||
+      target > 99
     ) {
       setPlayerEditError('セット数は1〜99で入力してください。')
       return
@@ -205,7 +206,7 @@ export default function RoomPage({ params }: { params: Promise<RoomParams> }) {
 
     const updatedPlayers = room.players.map((player) =>
       player.id === playerId
-        ? { ...player, name, target: editingPlayerTarget }
+        ? { ...player, name, target }
         : player
     )
 
@@ -612,12 +613,12 @@ export default function RoomPage({ params }: { params: Promise<RoomParams> }) {
             <label>
               セット
               <input
-                type="number"
-                min={1}
-                max={99}
-                step={1}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={2}
                 value={editingPlayerTarget}
-                onChange={(event) => setEditingPlayerTarget(Number(event.target.value))}
+                onChange={(event) => setEditingPlayerTarget(event.target.value)}
               />
             </label>
             {playerEditError && (

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../TechReport"
+		},
+		{
+			"path": "../billiard-streamlit"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
